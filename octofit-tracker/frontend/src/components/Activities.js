@@ -1,5 +1,23 @@
 import React, { useState, useEffect } from 'react';
 
+// Helper function to format date safely
+const formatDate = (dateString) => {
+  if (!dateString) return 'N/A';
+  try {
+    const date = new Date(dateString);
+    // Check if date is valid
+    if (isNaN(date.getTime())) return 'Invalid Date';
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  } catch (error) {
+    console.error('Error formatting date:', dateString, error);
+    return 'Invalid Date';
+  }
+};
+
 function Activities() {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,23 +50,43 @@ function Activities() {
       });
   }, []);
 
-  if (loading) return <div className="container mt-4"><p>Loading activities...</p></div>;
-  if (error) return <div className="container mt-4"><p className="text-danger">Error: {error}</p></div>;
+  if (loading) return (
+    <div className="container mt-4">
+      <div className="loading-message">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-3">Loading activities...</p>
+      </div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className="container mt-4">
+      <div className="alert alert-danger" role="alert">
+        <h4 className="alert-heading">Error!</h4>
+        <p>{error}</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="container mt-4">
-      <h2>Activities</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">Activities</h2>
+        <span className="badge bg-primary">{activities.length} Total</span>
+      </div>
       <div className="table-responsive">
-        <table className="table table-striped">
-          <thead>
+        <table className="table table-hover table-striped">
+          <thead className="table-primary">
             <tr>
-              <th>ID</th>
-              <th>User</th>
-              <th>Activity Type</th>
-              <th>Duration (min)</th>
-              <th>Distance (km)</th>
-              <th>Calories</th>
-              <th>Date</th>
+              <th scope="col">#</th>
+              <th scope="col">User</th>
+              <th scope="col">Activity Type</th>
+              <th scope="col">Duration (min)</th>
+              <th scope="col">Distance (km)</th>
+              <th scope="col">Calories</th>
+              <th scope="col">Date</th>
             </tr>
           </thead>
           <tbody>
@@ -61,7 +99,7 @@ function Activities() {
                   <td>{activity.duration}</td>
                   <td>{activity.distance}</td>
                   <td>{activity.calories_burned}</td>
-                  <td>{new Date(activity.date).toLocaleDateString()}</td>
+                  <td>{formatDate(activity.date)}</td>
                 </tr>
               ))
             ) : (

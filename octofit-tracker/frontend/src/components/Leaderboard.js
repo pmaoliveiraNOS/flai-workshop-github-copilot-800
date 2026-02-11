@@ -32,21 +32,41 @@ function Leaderboard() {
       });
   }, []);
 
-  if (loading) return <div className="container mt-4"><p>Loading leaderboard...</p></div>;
-  if (error) return <div className="container mt-4"><p className="text-danger">Error: {error}</p></div>;
+  if (loading) return (
+    <div className="container mt-4">
+      <div className="loading-message">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-3">Loading leaderboard...</p>
+      </div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className="container mt-4">
+      <div className="alert alert-danger" role="alert">
+        <h4 className="alert-heading">Error!</h4>
+        <p>{error}</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="container mt-4">
-      <h2>Leaderboard</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">🏆 Leaderboard</h2>
+        <span className="badge bg-warning text-dark">{leaderboard.length} Competitors</span>
+      </div>
       <div className="table-responsive">
-        <table className="table table-striped">
-          <thead>
+        <table className="table table-hover table-striped">
+          <thead className="table-warning">
             <tr>
-              <th>Rank</th>
-              <th>User</th>
-              <th>Team</th>
-              <th>Total Points</th>
-              <th>Activities Count</th>
+              <th scope="col">🥇 Rank</th>
+              <th scope="col">User</th>
+              <th scope="col">Team</th>
+              <th scope="col">Total Points</th>
+              <th scope="col">Activities</th>
             </tr>
           </thead>
           <tbody>
